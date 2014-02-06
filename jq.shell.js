@@ -178,11 +178,13 @@ var Shell = function (options, element, callback) {
   *
   */
   , execute = function (element, event) {
-      var input = $(element).val()
+      var input = $(element
+          ).val()
 			  , isCarriageReturn = input.charCodeAt(input.length - 1) === 10
         , isUpArrow = event.keyCode === 38
         , isDownArrow = event.keyCode === 40 
-        , command;
+        , command
+        , options = [];
 
 			// Is the last character of input a carriage return?
 			if (isCarriageReturn) {
@@ -203,6 +205,23 @@ var Shell = function (options, element, callback) {
 				// remove the first string and evaluate it as the command
 				// and pass the rest of input as parameters to the handler
         command = input.shift();
+        
+        // look for options
+        if (input.length > 1) {
+          for (var a = 0; a < input.length; a+=1) {
+            input[a].indexOf('-') == 0 ? options.push(input.shift().substr(1)) : null; // should throw error here
+          }
+        }
+
+        my.callOptionalCommands = function () {
+          if (opt.commands) {
+            var keys = Object.keys(opt.commands);
+            keys.forEach(function (item, index) {
+              opt.commands[item].call(this);
+            });
+          }
+        };
+
         switch (command) {
           case '': writeln('');
                    break;
@@ -228,8 +247,10 @@ var Shell = function (options, element, callback) {
           case 'refresh': window.location.reload();
                           break;
 
-          default: break;
+          default: my.callOptionalCommands();
+                   break;
         }
+
 
         // Reset the entry line
         $(element).val('');
@@ -287,6 +308,9 @@ var Shell = function (options, element, callback) {
   // Accessible functions in the data object
   //$el.data('myfunc', myfunc);
 
+  // add opt commands to the list
+  
+  // Go
   init();
 };
 
