@@ -213,11 +213,16 @@ var Shell = function (options, element, callback) {
           }
         }
 
-        my.callOptionalCommands = function () {
+        my.callOptionalCommands = function (input, options) {
           if (opt.commands) {
-            var keys = Object.keys(opt.commands);
+            var keys = Object.keys(opt.commands)
+              , shell = {
+                writeln: writeln,
+                execute: function (func, opts) {
+                }
+              };
             keys.forEach(function (item, index) {
-              opt.commands[item].call(this);
+              opt.commands[item](input, options, shell);
             });
           }
         };
@@ -247,7 +252,7 @@ var Shell = function (options, element, callback) {
           case 'refresh': window.location.reload();
                           break;
 
-          default: my.callOptionalCommands();
+          default: my.callOptionalCommands(input, options);
                    break;
         }
 

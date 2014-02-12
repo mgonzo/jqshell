@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<script src="lib/jquery.min.js"></script>
+	<script src="lib/q.js"></script>
 	<script src="../jq.shell.js"></script>
 	<style>
 		.jqshell.classic,
@@ -79,8 +80,21 @@
 		jQuery(document).ready( function($) {
       $('body').jqshell({
         commands: {
-          get: function () {
-            console.log('get');
+          curl: function (opts, input, shell) {
+            console.log('shell');
+            // get a remote resource
+            // download as opt.o [filename to output]
+            // write some start message out
+            // then wait, hold the screen from interaction
+            // then write some end message when finished
+            // or write it out to the screen
+            shell.execute(function () {
+            }, {
+              before: function () {
+              },
+              after: function () {
+              }
+            });
           }
         }
       });
