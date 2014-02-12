@@ -218,7 +218,16 @@ var Shell = function (options, element, callback) {
             var keys = Object.keys(opt.commands)
               , shell = {
                 writeln: writeln,
-                execute: function (func, opts) {
+                execute: function (command, args) {
+                  Q.fcall(function () {
+                      args.before();
+                    })
+                    .then(function () {
+                      command(options);
+                    })
+                    .then(function () {
+                      args.after();
+                    });
                 }
               };
             keys.forEach(function (item, index) {
